@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Parent {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  passwordHash  String
+  displayName   String
+  consentedAt   DateTime
+  createdAt     DateTime       @default(now())
+  children      Child[]
+  refreshTokens RefreshToken[]
+  approvals     LessonApproval[] @relation("ParentLessonApprovals")
+}
+
+model RefreshToken {
+  id         String   @id @default(uuid())
+  parentId   String
+  tokenHash  String
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime @default(now())
+  parent     Parent   @relation(fields: [parentId], references: [id])
+
+  @@index([parentId])
+}
+
+model Child {
+  id          String              @id @default(uuid())
+  parentId    String
+  displayName String
+  age         Int
+  createdAt   DateTime            @default(now())
+  parent      Parent              @relation(fields: [parentId], references: [id])
+  progress    Progress[]
+  xpEvents    XpEvent[]
+  badges      ChildBadge[]
+  streak      Streak?
+  screenTime  ScreenTimeLimit?
+  approvals   LessonApproval[]
+  activities  ChildActivity[]
+
+  @@index([parentId])
+}
+
+model LearningPath {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  minAge      Int
+  maxAge      Int
+  sortOrder   Int
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id             String   @id @default(uuid())
+  learningPathId String
+  title          String
+  summary        String
+  contentJson    Json
+  minAge         Int
+  maxAge         Int
+  sortOrder      Int
+  learningPath   LearningPath @relation(fields: [learningPathId], references: [id])
+  quizzes        Quiz[]
+  progress       Progress[]
+  approvals      LessonApproval[]
+
+  @@index([learningPathId, sortOrder])
+}
+
+model Quiz {
+  id        String   @id @default(uuid())
+  lessonId  String
+  questions Json
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+}
+
+model Progress {
+  id          String   @id @default(uuid())
+  childId     String
+  lessonId    String
+  status      String
+  score       Int
+  completedAt DateTime?
+  child       Child    @relation(fields: [childId], references: [id])
+  lesson      Lesson   @relation(fields: [lessonId], references: [id])
+
+  @@unique([childId, lessonId])
+  @@index([childId])
+}
+
+model XpEvent {
+  id        String   @id @default(uuid())
+  childId   String
+  source    String
+  points    Int
+  createdAt DateTime @default(now())
+  child     Child    @relation(fields: [childId], references: [id])
+
+  @@index([childId])
+}
+
+model Badge {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  title       String
+  description String
+  icon        String
+  children    ChildBadge[]
+}
+
+model ChildBadge {
+  id       String   @id @default(uuid())
+  childId  String
+  badgeId  String
+  earnedAt DateTime @default(now())
+  child    Child    @relation(fields: [childId], references: [id])
+  badge    Badge    @relation(fields: [badgeId], references: [id])
+
+  @@unique([childId, badgeId])
+}
+
+model Streak {
+  childId          String   @id
+  currentDays      Int
+  longestDays      Int
+  lastActivityDate DateTime?
+  child            Child    @relation(fields: [childId], references: [id])
+}
+
+model ScreenTimeLimit {
+  childId      String   @id
+  dailyMinutes Int
+  updatedAt    DateTime @default(now())
+  child        Child    @relation(fields: [childId], references: [id])
+}
+
+model LessonApproval {
+  id        String   @id @default(uuid())
+  parentId  String
+  childId   String
+  lessonId  String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+  parent    Parent   @relation("ParentLessonApprovals", fields: [parentId], references: [id])
+  child     Child    @relation(fields: [childId], references: [id])
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+
+  @@unique([childId, lessonId])
+  @@index([parentId])
+  @@index([lessonId])
+}
+
+model ChildActivity {
+  id           String   @id @default(uuid())
+  childId      String
+  minutes      Int
+  activityDate DateTime @default(now())
+  child        Child    @relation(fields: [childId], references: [id])
+
+  @@index([childId, activityDate])
+}
