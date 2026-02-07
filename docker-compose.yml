@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: brightbyte
+      POSTGRES_PASSWORD: brightbyte
+      POSTGRES_DB: brightbyte
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    command: npm run dev
+    environment:
+      DATABASE_URL: postgres://brightbyte:brightbyte@db:5432/brightbyte
+      JWT_SECRET: replace-with-secure-secret
+      JWT_REFRESH_SECRET: replace-with-secure-refresh-secret
+      FRONTEND_URL: http://localhost:5173
+      NODE_ENV: development
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
