@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import helmet from "helmet";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
@@ -20,7 +20,7 @@ export const createApp = () => {
   app.use(express.json({ limit: "1mb" }));
   app.use(rateLimit({ windowMs: 60 * 1000, max: 120 }));
 
-  app.get("/health", (req, res) => {
+  app.get("/health", (req: Request, res: Response) => {
     res.json({ status: "ok", uptime: process.uptime(), version: env.APP_VERSION });
   });
 
