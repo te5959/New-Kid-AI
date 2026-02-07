@@ -16,6 +16,7 @@ model Parent {
   createdAt     DateTime       @default(now())
   children      Child[]
   refreshTokens RefreshToken[]
+  approvals     LessonApproval[]
 }
 
 model RefreshToken {
