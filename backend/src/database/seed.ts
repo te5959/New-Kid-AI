@@ -11,6 +11,21 @@ const main = async () => {
     }
   });
 
+  const quizQuestions = [
+    {
+      id: "q1",
+      text: "AI learns from:",
+      options: ["Examples", "Magic", "Luck"],
+      answerIndex: 0
+    },
+    {
+      id: "q2",
+      text: "AI can have feelings:",
+      options: ["Yes", "No"],
+      answerIndex: 1
+    }
+  ];
+
   const lesson = await prisma.lesson.create({
     data: {
       learningPathId: aiPath.id,
@@ -23,20 +38,7 @@ const main = async () => {
         explanation: "AI is a tool that learns from examples.",
         visual: "Robot sorting toys by color.",
         interactive: "Drag toys into matching bins.",
-        quiz: [
-          {
-            id: "q1",
-            text: "AI learns from:",
-            options: ["Examples", "Magic", "Luck"],
-            answerIndex: 0
-          },
-          {
-            id: "q2",
-            text: "AI can have feelings:",
-            options: ["Yes", "No"],
-            answerIndex: 1
-          }
-        ]
+        quiz: quizQuestions
       }
     }
   });
@@ -44,7 +46,7 @@ const main = async () => {
   await prisma.quiz.create({
     data: {
       lessonId: lesson.id,
-      questions: { quiz: lesson.contentJson.quiz }
+      questions: { quiz: quizQuestions }
     }
   });
 
