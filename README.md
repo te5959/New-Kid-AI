@@ -36,7 +36,7 @@ npm run dev
 ### Environment Variables
 Create a `.env` file in `frontend/` if you want to override the API URL:
 ```bash
-VITE_API_URL=http://localhost:4000
+VITE_API_URL=https://new-kid-ai.onrender.com
 ```
 
 ## Compliance
