@@ -1,4 +1,4 @@
-# NovaSprout AI
+# BrightByte AI
 
 A child-friendly AI learning platform for ages 8–14, with parent controls, safe experiments, and age-adaptive lessons.
 
@@ -22,14 +22,21 @@ npm run dev
 ```
 
 ## Frontend
-- React + Vite
-- Responsive UI, kid-safe navigation
+- React + Vite + TypeScript
+- Tailwind CSS
+- React Router, Axios, Context API
 
 ### Setup
 ```bash
 cd frontend
 npm install
 npm run dev
+```
+
+### Environment Variables
+Create a `.env` file in `frontend/` if you want to override the API URL:
+```bash
+VITE_API_URL=https://new-kid-ai.onrender.com
 ```
 
 ## Compliance
