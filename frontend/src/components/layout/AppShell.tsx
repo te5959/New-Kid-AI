@@ -10,13 +10,13 @@ const AppShell = ({ children }: { children: React.ReactNode }) => {
             <span className="text-2xl">🌟</span> BrightByte AI
           </Link>
           <nav className="flex gap-4 text-sm font-semibold text-slate-600">
-            <NavLink className={({ isActive }) => (isActive ? "text-ocean" : "")}" to="/onboarding">
+            <NavLink className={({ isActive }) => (isActive ? "text-ocean" : "")} to="/onboarding">
               Onboarding
             </NavLink>
-            <NavLink className={({ isActive }) => (isActive ? "text-ocean" : "")}" to="/child">
+            <NavLink className={({ isActive }) => (isActive ? "text-ocean" : "")} to="/child">
               Child Zone
             </NavLink>
-            <NavLink className={({ isActive }) => (isActive ? "text-ocean" : "")}" to="/parent">
+            <NavLink className={({ isActive }) => (isActive ? "text-ocean" : "")} to="/parent">
               Parent Hub
             </NavLink>
           </nav>
